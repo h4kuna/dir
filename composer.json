@@ -1,0 +1,36 @@
+{
+  "name": "h4kuna/dir",
+  "description": "Create easily directories",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Milan Matějček",
+      "email": "milan.matejcek@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "nette/utils": "^2.2 || ^3.0"
+  },
+  "require-dev": {
+    "nette/tester": "^2.4",
+    "phpstan/phpstan-strict-rules": "^1.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "h4kuna\\Dir\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "h4kuna\\Dir\\Tests\\": "tests/src"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "phpstan": "vendor/bin/phpstan analyse",
+    "tests": "vendor/bin/tester -s -j 4 -C --colors 1 tests/src/Unit"
+  }
+}
