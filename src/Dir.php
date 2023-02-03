@@ -29,9 +29,7 @@ abstract class Dir
 		$path = dirname($name);
 		if ($path !== '.') {
 			return $this->dir($path)->filename(basename($name), $extension);
-		}
-
-		if ($extension !== '') {
+		} elseif ($extension !== '') {
 			$name .= ".$extension";
 		}
 
@@ -40,8 +38,8 @@ abstract class Dir
 
 
 	/**
-	 * Add relative path from $baseDir
-	 * @example both is possible foo or foo/bar
+	 * Add relative path from $baseAbsolutePath
+	 * @example both is possible 'foo' or 'foo/bar'
 	 */
 	public function dir(string $path): static
 	{

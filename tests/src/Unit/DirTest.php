@@ -13,7 +13,7 @@ final class DirTest extends TestCase
 
 	public function testBasic(): void
 	{
-		$tempDir = __DIR__ . '/../temp';
+		$tempDir = __DIR__ . '/../../temp';
 		exec("rm -rf '$tempDir/'*");
 		$tempDir = new TempDir($tempDir);
 		$barDir = $tempDir->dir('foo/bar');
@@ -29,7 +29,7 @@ final class DirTest extends TestCase
 
 	public function testFilenameOnly(): void
 	{
-		$tempDir = __DIR__ . '/../temp';
+		$tempDir = __DIR__ . '/../../temp';
 		exec("rm -rf '$tempDir/'*");
 		$tempDir = new TempDir($tempDir);
 
