@@ -47,8 +47,18 @@ final class DirTest extends TestCase
 		$tempDir = new TempDir();
 		$sysTempDir = sys_get_temp_dir() . '/h4kuna';
 
-		$file = $tempDir->filename('foo/bar/baz', 'txt');
+		$tempDir->filename('foo/bar/baz', 'txt');
 		Assert::true(is_dir("$sysTempDir/foo/bar"));
+	}
+
+
+	public function testSysTempDirSub(): void
+	{
+		$tempDir = new TempDir('bar');
+		$sysTempDir = sys_get_temp_dir() . '/h4kuna';
+
+		$tempDir->filename('foo/bar/baz', 'txt');
+		Assert::true(is_dir("$sysTempDir/bar/foo/bar"));
 	}
 
 }

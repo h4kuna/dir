@@ -35,7 +35,7 @@ abstract class Dir
 			$name .= ".$extension";
 		}
 
-		return $this->absolutePath($name);
+		return self::slash($this->baseAbsolutePath, $name);
 	}
 
 
@@ -45,7 +45,7 @@ abstract class Dir
 	 */
 	public function dir(string $path): static
 	{
-		$newDir = $this->absolutePath($path);
+		$newDir = self::slash($this->baseAbsolutePath, $path);
 		FileSystem::createDir($newDir);
 
 		return new static($newDir);
@@ -58,9 +58,23 @@ abstract class Dir
 	}
 
 
-	private function absolutePath(string $path): string
+	final protected static function makeHomeDir(string $path, string $home = ''): string
 	{
-		return "$this->baseAbsolutePath/$path";
+		if (FileSystem::isAbsolute($path) === false) {
+			if ($home === '') {
+				$home = self::slash(sys_get_temp_dir(), 'h4kuna');
+			}
+			$path = self::slash($home, $path);
+			FileSystem::createDir($path); // intentionally here in condition branch
+		}
+
+		return $path;
+	}
+
+
+	final protected static function slash(string $dir1, string $dir2): string
+	{
+		return "$dir1/$dir2";
 	}
 
 }
