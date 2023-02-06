@@ -41,6 +41,16 @@ final class DirTest extends TestCase
 		Assert::same("$tempDir/foo/bar/baz.txt", $file);
 	}
 
+
+	public function testSysTempDir(): void
+	{
+		$tempDir = new TempDir();
+		$sysTempDir = sys_get_temp_dir() . '/h4kuna';
+
+		$file = $tempDir->filename('foo/bar/baz', 'txt');
+		Assert::true(is_dir("$sysTempDir/foo/bar"));
+	}
+
 }
 
 (new DirTest())->run();

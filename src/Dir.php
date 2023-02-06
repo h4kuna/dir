@@ -6,10 +6,12 @@ use Nette\Utils\FileSystem;
 
 /**
  * You don't fill last slash in path
+ *
+ * @phpstan-consistent-constructor
  */
 abstract class Dir
 {
-	final public function __construct(private string $baseAbsolutePath)
+	public function __construct(private string $baseAbsolutePath)
 	{
 	}
 
