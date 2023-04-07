@@ -4,6 +4,7 @@ namespace h4kuna\Dir\Tests\Unit;
 
 require __DIR__ . '/../../bootstrap.php';
 
+use h4kuna\Dir\Dir;
 use h4kuna\Dir\TempDir;
 use Tester\Assert;
 use Tester\TestCase;
@@ -11,11 +12,19 @@ use Tester\TestCase;
 final class DirTest extends TestCase
 {
 
+	private const TEMP_DIR = __DIR__ . '/../../temp';
+
+
+	protected function setUp()
+	{
+		$tempDir = self::TEMP_DIR;
+		exec("rm -rf '$tempDir/'*");
+	}
+
+
 	public function testBasic(): void
 	{
-		$tempDir = __DIR__ . '/../../temp';
-		exec("rm -rf '$tempDir/'*");
-		$tempDir = new TempDir($tempDir);
+		$tempDir = new TempDir(self::TEMP_DIR);
 		$barDir = $tempDir->dir('foo/bar');
 		Assert::true(is_dir("$tempDir/foo/bar"));
 
@@ -29,9 +38,7 @@ final class DirTest extends TestCase
 
 	public function testFilenameOnly(): void
 	{
-		$tempDir = __DIR__ . '/../../temp';
-		exec("rm -rf '$tempDir/'*");
-		$tempDir = new TempDir($tempDir);
+		$tempDir = new TempDir(self::TEMP_DIR);
 
 		$file = $tempDir->filename('foo/bar/baz', 'txt');
 		Assert::true(is_dir("$tempDir/foo/bar"));
@@ -39,6 +46,24 @@ final class DirTest extends TestCase
 		Assert::true(is_file($file));
 
 		Assert::same("$tempDir/foo/bar/baz.txt", $file);
+	}
+
+
+	public function testBadBehavior(): void
+	{
+		$dir = new Dir(self::TEMP_DIR . '/foo/foo');
+		$clone = $dir->dir('');
+		Assert::same(self::TEMP_DIR . '/foo/foo/', $clone->getDir());
+		Assert::notSame($dir, $clone);
+	}
+
+
+	public function testCreate(): void
+	{
+		$dir = new Dir(self::TEMP_DIR . '/foo/foo');
+		$clone = $dir->create();
+		Assert::same(self::TEMP_DIR . '/foo/foo', $clone->getDir());
+		Assert::same($dir, $clone);
 	}
 
 

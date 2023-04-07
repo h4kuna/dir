@@ -9,7 +9,7 @@ use Nette\Utils\FileSystem;
  *
  * @phpstan-consistent-constructor
  */
-abstract class Dir
+class Dir
 {
 	public function __construct(private string $baseAbsolutePath)
 	{
@@ -49,6 +49,14 @@ abstract class Dir
 		FileSystem::createDir($newDir);
 
 		return new static($newDir);
+	}
+
+
+	public function create(): static
+	{
+		FileSystem::createDir($this->baseAbsolutePath);
+
+		return $this;
 	}
 
 
