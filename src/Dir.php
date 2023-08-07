@@ -2,6 +2,8 @@
 
 namespace h4kuna\Dir;
 
+use h4kuna\Dir\Exceptions\DirIsNotWriteableException;
+use Nette;
 use Nette\Utils\FileSystem;
 
 /**
@@ -45,16 +47,35 @@ class Dir
 	 */
 	public function dir(string $path): static
 	{
-		$newDir = self::slash($this->baseAbsolutePath, $path);
-		FileSystem::createDir($newDir);
+		$newDir = self::slash($this->baseAbsolutePath, $path);;
 
-		return new static($newDir);
+		return new static(self::createDir($newDir));
 	}
 
 
 	public function create(): static
 	{
-		FileSystem::createDir($this->baseAbsolutePath);
+		self::createDir($this->baseAbsolutePath);
+
+		return $this;
+	}
+
+
+	public function checkWriteable(): static
+	{
+		if (is_writable($this->baseAbsolutePath) === false) {
+			throw new DirIsNotWriteableException($this->baseAbsolutePath);
+		}
+
+		return $this;
+	}
+
+
+	public function checkReadable(): static
+	{
+		if (is_readable($this->baseAbsolutePath) === false) {
+			throw new DirIsNotWriteableException($this->baseAbsolutePath);
+		}
 
 		return $this;
 	}
@@ -72,8 +93,7 @@ class Dir
 			if ($home === '') {
 				$home = self::slash(sys_get_temp_dir(), 'h4kuna');
 			}
-			$path = self::slash($home, $path);
-			FileSystem::createDir($path); // intentionally here in condition branch
+			$path = self::createDir(self::slash($home, $path)); // intentionally here in condition branch
 		}
 
 		return $path;
@@ -83,6 +103,18 @@ class Dir
 	final protected static function slash(string $dir1, string $dir2): string
 	{
 		return "$dir1/$dir2";
+	}
+
+
+	private static function createDir(string $path): string
+	{
+		try {
+			FileSystem::createDir($path);
+		} catch (Nette\IOException $e) {
+			throw new DirIsNotWriteableException($path, 0, $e);
+		}
+
+		return $path;
 	}
 
 }
