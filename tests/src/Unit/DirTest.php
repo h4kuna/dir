@@ -5,6 +5,8 @@ namespace h4kuna\Dir\Tests\Unit;
 require __DIR__ . '/../../bootstrap.php';
 
 use h4kuna\Dir\Dir;
+use h4kuna\Dir\Exceptions\DirIsNotReadableException;
+use h4kuna\Dir\Exceptions\DirIsNotWriteableException;
 use h4kuna\Dir\TempDir;
 use Tester\Assert;
 use Tester\TestCase;
@@ -84,6 +86,36 @@ final class DirTest extends TestCase
 
 		$tempDir->filename('foo/bar/baz', 'txt');
 		Assert::true(is_dir("$sysTempDir/bar/foo/bar"));
+	}
+
+
+	public function testCheckWritealbe(): void
+	{
+		$dir = new Dir('/etc/foo');
+		Assert::exception(fn () => $dir->checkWriteable(), DirIsNotWriteableException::class, '/etc/foo');
+
+		$dir = new Dir(self::TEMP_DIR);
+		Assert::same($dir, $dir->checkWriteable());
+	}
+
+
+	public function testCheckReadable(): void
+	{
+		$dir = new Dir('/etc/foo');
+		Assert::exception(fn () => $dir->checkReadable(), DirIsNotReadableException::class, '/etc/foo');
+
+		$dir = new Dir(self::TEMP_DIR);
+		Assert::same($dir, $dir->checkReadable());
+	}
+
+
+	public function testFileInfo(): void
+	{
+		$dir = new Dir(self::TEMP_DIR);
+		$fileInfo = $dir->fileInfo('file');
+
+		Assert::type(\SplFileInfo::class, $fileInfo);
+		Assert::same(self::TEMP_DIR . '/file', $fileInfo->getPathname());
 	}
 
 }

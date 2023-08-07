@@ -2,9 +2,9 @@
 
 namespace h4kuna\Dir;
 
-use h4kuna\Dir\Exceptions\DirIsNotWriteableException;
 use Nette;
 use Nette\Utils\FileSystem;
+use SplFileInfo;
 
 /**
  * You don't fill last slash in path
@@ -27,6 +27,7 @@ class Dir
 	/**
 	 * Make absolute path with filename
 	 * @param string $name doesn't start with slash
+	 * @throws Exceptions\IOException
 	 */
 	public function filename(string $name, string $extension = ''): string
 	{
@@ -42,7 +43,17 @@ class Dir
 
 
 	/**
+	 * @throws Exceptions\IOException
+	 */
+	public function fileInfo(string $name, string $extension = ''): SplFileInfo
+	{
+		return new SplFileInfo($this->filename($name, $extension));
+	}
+
+
+	/**
 	 * Add relative path from $baseAbsolutePath
+	 * @throws Exceptions\IOException
 	 * @example both is possible 'foo' or 'foo/bar'
 	 */
 	public function dir(string $path): static
@@ -53,6 +64,9 @@ class Dir
 	}
 
 
+	/**
+	 * @throws Exceptions\IOException
+	 */
 	public function create(): static
 	{
 		self::createDir($this->baseAbsolutePath);
@@ -61,20 +75,26 @@ class Dir
 	}
 
 
+	/**
+	 * @throws Exceptions\DirIsNotWriteableException
+	 */
 	public function checkWriteable(): static
 	{
 		if (is_writable($this->baseAbsolutePath) === false) {
-			throw new DirIsNotWriteableException($this->baseAbsolutePath);
+			throw new Exceptions\DirIsNotWriteableException($this->baseAbsolutePath);
 		}
 
 		return $this;
 	}
 
 
+	/**
+	 * @throws Exceptions\DirIsNotReadableException
+	 */
 	public function checkReadable(): static
 	{
 		if (is_readable($this->baseAbsolutePath) === false) {
-			throw new DirIsNotWriteableException($this->baseAbsolutePath);
+			throw new Exceptions\DirIsNotReadableException($this->baseAbsolutePath);
 		}
 
 		return $this;
@@ -87,6 +107,9 @@ class Dir
 	}
 
 
+	/**
+	 * @throws Exceptions\IOException
+	 */
 	final protected static function makeHomeDir(string $path, string $home = ''): string
 	{
 		if (FileSystem::isAbsolute($path) === false) {
@@ -106,12 +129,15 @@ class Dir
 	}
 
 
+	/**
+	 * @throws Exceptions\IOException
+	 */
 	private static function createDir(string $path): string
 	{
 		try {
 			FileSystem::createDir($path);
 		} catch (Nette\IOException $e) {
-			throw new DirIsNotWriteableException($path, 0, $e);
+			throw new Exceptions\IOException($path, 0, $e);
 		}
 
 		return $path;

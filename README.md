@@ -53,6 +53,24 @@ class MyClass {
 }
 ```
 
+## Check dir
+
+If directory does not exist, the method `create` throw IOException. If directory exists, but is not writeable, the method `checkWriteable` throw `DirIsNotWriteableException` extends from `IOException`.
+
+```php
+use h4kuna\Dir;
+try {
+    $fileInfo = (new Dir\Dir('/any/path'))
+        ->create()
+        ->checkWriteable()
+        ->fileInfo('foo.txt');
+} catch (Dir\Exceptions\IOException $e) {
+    // dir is not writable
+}
+
+var_dump($fileInfo->getPathname()); // /any/path/foo.txt
+```
+
 ## Incorrect use
 
 In constructor use only absolute path without last slash like in example. 

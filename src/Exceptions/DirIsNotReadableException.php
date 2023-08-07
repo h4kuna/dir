@@ -2,7 +2,7 @@
 
 namespace h4kuna\Dir\Exceptions;
 
-class DirIsNotWriteableException extends IOException
+class DirIsNotReadableException extends IOException
 {
 
 }
