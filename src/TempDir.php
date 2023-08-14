@@ -4,9 +4,9 @@ namespace h4kuna\Dir;
 
 final class TempDir extends Dir
 {
-	public function __construct(string $baseAbsolutePath = '')
+	public function __construct(string $baseAbsolutePath = '', int $permissions = 0777)
 	{
-		parent::__construct(self::makeHomeDir($baseAbsolutePath));
+		parent::__construct($this->makeHomeDir($baseAbsolutePath, $permissions), $permissions);
 	}
 
 }

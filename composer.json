@@ -14,7 +14,8 @@
   },
   "require-dev": {
     "nette/tester": "^2.4",
-    "phpstan/phpstan-strict-rules": "^1.4"
+    "phpstan/phpstan-strict-rules": "^1.4",
+    "tracy/tracy": "^2.10"
   },
   "autoload": {
     "psr-4": {

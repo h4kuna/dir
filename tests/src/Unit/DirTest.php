@@ -118,6 +118,29 @@ final class DirTest extends TestCase
 		Assert::same(self::TEMP_DIR . '/file', $fileInfo->getPathname());
 	}
 
+
+	public function testPermission(): void
+	{
+		$dir = new Dir(self::TEMP_DIR, 0755);
+		$dir->create(0744);
+		$path = $dir->getDir();
+		Assert::same(0744, self::octal($path));
+
+		$foo = $dir->dir('foo');
+		$path = $foo->getDir();
+		Assert::same(0755, self::octal($path));
+
+		$foo2 = $foo->dir('foo', 0711);
+		$path = $foo2->getDir();
+		Assert::same(0711, self::octal($path));
+	}
+
+
+	private static function octal(string $path): int
+	{
+		return octdec(substr(sprintf('%o', fileperms($path)), -4));
+	}
+
 }
 
 (new DirTest())->run();
