@@ -2,6 +2,7 @@
 
 [![Latest stable](https://img.shields.io/packagist/v/h4kuna/dir.svg)](https://packagist.org/packages/h4kuna/dir)
 [![Downloads this Month](https://img.shields.io/packagist/dm/h4kuna/dir.svg)](https://packagist.org/packages/h4kuna/dir)
+[![Coverage Status](https://coveralls.io/repos/github/h4kuna/dir/badge.svg?branch=master)](https://coveralls.io/github/h4kuna/dir?branch=master)
 
 One abstract class provide path and prepare filesystem.
 
