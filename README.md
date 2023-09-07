@@ -30,9 +30,10 @@ class StorageDir extends \h4kuna\Dir\Dir
 }
 ```
 
-Start to use. Path in constructor must exist!
+Start to use.
 ```php
-$storageDir = new StorageDir('/documet/root/data');
+$storageDir = new StorageDir('/documet/root/data'); // dir in constructor does not check
+$storageDir->create(); // if dir from constructor does not exist, let's check and create
 $subDir = $storageDir->dir('foo/bar');
 $filepath = $subDir->filename('lucky', 'jpg');
 $filepath2 = $storageDir->filename('baz/foo/happy.jpg');
