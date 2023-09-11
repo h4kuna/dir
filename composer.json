@@ -32,6 +32,6 @@
   "scripts": {
     "phpstan": "vendor/bin/phpstan analyse",
     "tests": "vendor/bin/tester -s -C --colors 1 tests/src/Unit",
-    "coverage": "vendor/bin/tester -s --coverage coverage.html --coverage-src src/ --colors 1 -s -C tests/src/Unit"
+    "coverage": "vendor/bin/tester --coverage coverage.html --coverage-src src/ -s -C --colors 1 tests/src/Unit"
   }
 }
