@@ -5,13 +5,14 @@ namespace h4kuna\Dir;
 use Nette;
 use Nette\Utils\FileSystem;
 use SplFileInfo;
+use Stringable;
 
 /**
  * You don't fill last slash in path
  *
  * @phpstan-consistent-constructor
  */
-class Dir
+class Dir implements Stringable
 {
 	public function __construct(private string $baseAbsolutePath)
 	{
