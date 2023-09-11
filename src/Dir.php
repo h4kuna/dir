@@ -59,9 +59,9 @@ class Dir implements Stringable
 	 */
 	public function dir(string $path): static
 	{
-		$newDir = self::slash($this->baseAbsolutePath, $path);;
+		$newDir = self::slash($this->baseAbsolutePath, $path);
 
-		return new static(self::createDir($newDir));
+		return new static(static::createDir($newDir));
 	}
 
 
@@ -70,7 +70,7 @@ class Dir implements Stringable
 	 */
 	public function create(): static
 	{
-		self::createDir($this->baseAbsolutePath);
+		static::createDir($this->baseAbsolutePath);
 
 		return $this;
 	}
@@ -117,7 +117,7 @@ class Dir implements Stringable
 			if ($home === '') {
 				$home = self::slash(sys_get_temp_dir(), 'h4kuna');
 			}
-			$path = self::createDir(self::slash($home, $path)); // intentionally here in condition branch
+			$path = static::createDir(self::slash($home, $path)); // intentionally here in condition branch
 		}
 
 		return $path;
@@ -133,7 +133,7 @@ class Dir implements Stringable
 	/**
 	 * @throws Exceptions\IOException
 	 */
-	private static function createDir(string $path): string
+	protected static function createDir(string $path): string
 	{
 		try {
 			FileSystem::createDir($path);
