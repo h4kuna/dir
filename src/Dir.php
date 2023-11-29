@@ -2,10 +2,11 @@
 
 namespace h4kuna\Dir;
 
-use Nette;
-use Nette\Utils\FileSystem;
+use h4kuna\Dir\Storage\Filesystem;
+use h4kuna\Dir\Storage\Local;
 use SplFileInfo;
 use Stringable;
+use Throwable;
 
 /**
  * You don't fill last slash in path
@@ -14,8 +15,12 @@ use Stringable;
  */
 class Dir implements Stringable
 {
-	public function __construct(private string $baseAbsolutePath)
+	private Filesystem $filesystem;
+
+
+	public function __construct(private string $baseAbsolutePath, ?Filesystem $filesystem = null)
 	{
+		$this->filesystem = $filesystem ?? new Local();
 	}
 
 
@@ -61,7 +66,7 @@ class Dir implements Stringable
 	{
 		$newDir = self::slash($this->baseAbsolutePath, $path);
 
-		return new static(static::createDir($newDir));
+		return new static(self::createDir($newDir, $this->filesystem), $this->filesystem);
 	}
 
 
@@ -70,7 +75,7 @@ class Dir implements Stringable
 	 */
 	public function create(): static
 	{
-		static::createDir($this->baseAbsolutePath);
+		self::createDir($this->baseAbsolutePath, $this->filesystem);
 
 		return $this;
 	}
@@ -81,7 +86,7 @@ class Dir implements Stringable
 	 */
 	public function checkWriteable(): static
 	{
-		if (is_writable($this->baseAbsolutePath) === false) {
+		if ($this->filesystem->isWriteable($this->baseAbsolutePath) === false) {
 			throw new Exceptions\DirIsNotWriteableException($this->baseAbsolutePath);
 		}
 
@@ -94,7 +99,7 @@ class Dir implements Stringable
 	 */
 	public function checkReadable(): static
 	{
-		if (is_readable($this->baseAbsolutePath) === false) {
+		if ($this->filesystem->isReadable($this->baseAbsolutePath) === false) {
 			throw new Exceptions\DirIsNotReadableException($this->baseAbsolutePath);
 		}
 
@@ -111,13 +116,13 @@ class Dir implements Stringable
 	/**
 	 * @throws Exceptions\IOException
 	 */
-	final protected static function makeHomeDir(string $path, string $home = ''): string
+	final protected static function makeHomeDir(string $path, Filesystem $filesystem, string $root = ''): string
 	{
-		if (FileSystem::isAbsolute($path) === false) {
-			if ($home === '') {
-				$home = self::slash(sys_get_temp_dir(), 'h4kuna');
+		if ($filesystem->isAbsolute($path) === false) {
+			if ($root === '') {
+				$root = self::slash(sys_get_temp_dir(), 'h4kuna');
 			}
-			$path = static::createDir(self::slash($home, $path)); // intentionally here in condition branch
+			$path = self::createDir(self::slash($root, $path), $filesystem); // intentionally here in condition branch
 		}
 
 		return $path;
@@ -133,11 +138,11 @@ class Dir implements Stringable
 	/**
 	 * @throws Exceptions\IOException
 	 */
-	protected static function createDir(string $path): string
+	private static function createDir(string $path, Filesystem $filesystem): string
 	{
 		try {
-			FileSystem::createDir($path);
-		} catch (Nette\IOException $e) {
+			$filesystem->createDir($path);
+		} catch (Throwable $e) {
 			throw new Exceptions\IOException($path, 0, $e);
 		}
 

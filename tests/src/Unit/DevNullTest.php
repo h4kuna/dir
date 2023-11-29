@@ -4,7 +4,8 @@ namespace h4kuna\Dir\Tests\Unit;
 
 require __DIR__ . '/../../bootstrap.php';
 
-use h4kuna\Dir\DevNull;
+use h4kuna\Dir\Dir;
+use h4kuna\Dir\Storage\DevNull;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -13,7 +14,7 @@ final class DevNullTest extends TestCase
 
 	public function testBasic(): void
 	{
-		$dir = new DevNull('/any/path');
+		$dir = new Dir('/any/path', new DevNull());
 
 		// make nothing
 		$dir->create()
