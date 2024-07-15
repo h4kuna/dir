@@ -24,9 +24,11 @@ class Dir implements Stringable
 	}
 
 
-	public function getDir(): string
+	public function getDir(bool $addSlash = false): string
 	{
-		return $this->baseAbsolutePath;
+		return $addSlash
+			? self::slash($this->baseAbsolutePath, '')
+			: $this->baseAbsolutePath;
 	}
 
 
@@ -37,6 +39,7 @@ class Dir implements Stringable
 	 */
 	public function filename(string $name, string $extension = ''): string
 	{
+		/** @var non-empty-string $path */
 		$path = dirname($name);
 		if ($path !== '.') {
 			return $this->dir($path)->filename(basename($name), $extension);
@@ -59,6 +62,9 @@ class Dir implements Stringable
 
 	/**
 	 * Add relative path from $baseAbsolutePath
+	 *
+	 * @param non-empty-string $path
+	 *
 	 * @throws Exceptions\IOException
 	 * @example both is possible 'foo' or 'foo/bar'
 	 */

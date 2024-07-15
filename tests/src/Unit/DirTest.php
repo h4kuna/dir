@@ -54,7 +54,7 @@ final class DirTest extends TestCase
 	public function testBadBehavior(): void
 	{
 		$dir = new Dir(self::TEMP_DIR . '/foo/foo');
-		$clone = $dir->dir('');
+		$clone = $dir->dir(''); // @phpstan-ignore-line
 		Assert::same(self::TEMP_DIR . '/foo/foo/', $clone->getDir());
 		Assert::notSame($dir, $clone);
 	}
@@ -65,6 +65,7 @@ final class DirTest extends TestCase
 		$dir = new Dir(self::TEMP_DIR . '/foo/foo');
 		$clone = $dir->create();
 		Assert::same(self::TEMP_DIR . '/foo/foo', $clone->getDir());
+		Assert::same(self::TEMP_DIR . '/foo/foo/', $clone->getDir(true));
 		Assert::same($dir, $clone);
 	}
 
