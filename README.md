@@ -6,6 +6,8 @@
 [![Total Downloads](https://poser.pugx.org/h4kuna/dir/downloads?format=flat)](https://packagist.org/packages/h4kuna/dir)
 [![License](https://poser.pugx.org/h4kuna/dir/license?format=flat)](https://packagist.org/packages/h4kuna/dir)
 
+Part of the [h4kuna PHP libraries](https://github.com/h4kuna/library), see the overview of all packages.
+
 One abstract class provide path and prepare filesystem.
 
 ### Install by composer 
