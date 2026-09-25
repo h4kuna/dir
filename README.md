@@ -2,7 +2,7 @@
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/h4kuna/dir.svg)](https://packagist.org/packages/h4kuna/dir)
 [![Latest Stable Version](https://poser.pugx.org/h4kuna/dir/v/stable?format=flat)](https://packagist.org/packages/h4kuna/dir)
-[![Coverage Status](https://coveralls.io/repos/github/h4kuna/dir/badge.svg?branch=master)](https://coveralls.io/github/h4kuna/dir?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/h4kuna/dir/badge.svg?branch=main)](https://coveralls.io/github/h4kuna/dir?branch=main)
 [![Total Downloads](https://poser.pugx.org/h4kuna/dir/downloads?format=flat)](https://packagist.org/packages/h4kuna/dir)
 [![License](https://poser.pugx.org/h4kuna/dir/license?format=flat)](https://packagist.org/packages/h4kuna/dir)
 
