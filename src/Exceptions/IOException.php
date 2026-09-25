@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace h4kuna\Dir\Exceptions;
 
-class IOException extends \RuntimeException
+use RuntimeException;
+
+class IOException extends RuntimeException
 {
 
 }

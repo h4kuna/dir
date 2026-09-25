@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace h4kuna\Dir\Tests\Unit;
 
@@ -8,8 +8,14 @@ use h4kuna\Dir\Dir;
 use h4kuna\Dir\Exceptions\DirIsNotReadableException;
 use h4kuna\Dir\Exceptions\DirIsNotWriteableException;
 use h4kuna\Dir\TempDir;
+use SplFileInfo;
 use Tester\Assert;
 use Tester\TestCase;
+use function exec;
+use function is_dir;
+use function is_file;
+use function sys_get_temp_dir;
+use function touch;
 
 final class DirTest extends TestCase
 {
@@ -17,12 +23,11 @@ final class DirTest extends TestCase
 	private const TEMP_DIR = __DIR__ . '/../../temp';
 
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$tempDir = self::TEMP_DIR;
 		exec("rm -rf '$tempDir/'*");
 	}
-
 
 	public function testBasic(): void
 	{
@@ -37,7 +42,6 @@ final class DirTest extends TestCase
 		Assert::same("$tempDir/foo/bar", (string) $barDir);
 	}
 
-
 	public function testFilenameOnly(): void
 	{
 		$tempDir = new TempDir(self::TEMP_DIR);
@@ -50,7 +54,6 @@ final class DirTest extends TestCase
 		Assert::same("$tempDir/foo/bar/baz.txt", $file);
 	}
 
-
 	public function testBadBehavior(): void
 	{
 		$dir = new Dir(self::TEMP_DIR . '/foo/foo');
@@ -58,7 +61,6 @@ final class DirTest extends TestCase
 		Assert::same(self::TEMP_DIR . '/foo/foo/', $clone->getDir());
 		Assert::notSame($dir, $clone);
 	}
-
 
 	public function testCreate(): void
 	{
@@ -69,7 +71,6 @@ final class DirTest extends TestCase
 		Assert::same($dir, $clone);
 	}
 
-
 	public function testSysTempDir(): void
 	{
 		$tempDir = new TempDir();
@@ -78,7 +79,6 @@ final class DirTest extends TestCase
 		$tempDir->filename('foo/bar/baz', 'txt');
 		Assert::true(is_dir("$sysTempDir/foo/bar"));
 	}
-
 
 	public function testSysTempDirSub(): void
 	{
@@ -89,33 +89,30 @@ final class DirTest extends TestCase
 		Assert::true(is_dir("$sysTempDir/bar/foo/bar"));
 	}
 
-
 	public function testCheckWritealbe(): void
 	{
 		$dir = new Dir('/etc/foo');
-		Assert::exception(fn () => $dir->checkWriteable(), DirIsNotWriteableException::class, '/etc/foo');
+		Assert::exception(static fn () => $dir->checkWriteable(), DirIsNotWriteableException::class, '/etc/foo');
 
 		$dir = new Dir(self::TEMP_DIR);
 		Assert::same($dir, $dir->checkWriteable());
 	}
 
-
 	public function testCheckReadable(): void
 	{
 		$dir = new Dir('/etc/foo');
-		Assert::exception(fn () => $dir->checkReadable(), DirIsNotReadableException::class, '/etc/foo');
+		Assert::exception(static fn () => $dir->checkReadable(), DirIsNotReadableException::class, '/etc/foo');
 
 		$dir = new Dir(self::TEMP_DIR);
 		Assert::same($dir, $dir->checkReadable());
 	}
-
 
 	public function testFileInfo(): void
 	{
 		$dir = new Dir(self::TEMP_DIR);
 		$fileInfo = $dir->fileInfo('file');
 
-		Assert::type(\SplFileInfo::class, $fileInfo);
+		Assert::type(SplFileInfo::class, $fileInfo);
 		Assert::same(self::TEMP_DIR . '/file', $fileInfo->getPathname());
 	}
 
